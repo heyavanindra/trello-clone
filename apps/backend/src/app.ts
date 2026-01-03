@@ -45,6 +45,7 @@ app.use(
 console.log(process.env.FRONTEND_URL)
 
 io.use((socket, next) => {
+  console.log("hello world")
   const token = socket.handshake.auth.token;
   if (!token) {
     return next(new Error("Authentication error"));
