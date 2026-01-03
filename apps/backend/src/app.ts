@@ -13,6 +13,8 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 const app = express();
 const server = createServer(app);
 
+dotenv.config();
+
 export type TaskType = {
   _id: string;
   id: string;
@@ -39,6 +41,8 @@ app.use(
     credentials: true,
   })
 );
+
+console.log(process.env.FRONTEND_URL)
 
 io.use((socket, next) => {
   const token = socket.handshake.auth.token;
@@ -106,7 +110,7 @@ io.on("connection", (socket) => {
 
 app.use(express.json());
 
-dotenv.config();
+
 
 const PORT = process.env.PORT || 5000;
 
