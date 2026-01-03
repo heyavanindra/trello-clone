@@ -42,7 +42,7 @@ app.use(
   })
 );
 
-console.log(process.env.FRONTEND_URL);
+console.log(process.env.FRONTEND_URL)
 
 io.use((socket, next) => {
   const token = socket.handshake.auth.token;
@@ -55,10 +55,6 @@ io.use((socket, next) => {
     (socket as any).userId = (decoded as JwtPayload).userId;
     next();
   } catch (err) {
-    console.error(
-      "Socket Auth Error:",
-      err instanceof Error ? err.message : "Unknown error"
-    );
     next(new Error("Authentication error"));
   }
 });
@@ -98,7 +94,7 @@ io.on("connection", (socket) => {
         //@ts-ignore
         createdBy: socket.userId,
       };
-
+    
       const newTask = await Task.create(taskCreated);
       console.log(newTask);
       io.to(data.boardSlug).emit("task-created", {
@@ -113,6 +109,8 @@ io.on("connection", (socket) => {
 });
 
 app.use(express.json());
+
+
 
 const PORT = process.env.PORT || 5000;
 
