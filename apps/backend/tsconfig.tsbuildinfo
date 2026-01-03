@@ -1,1 +1,1 @@
-{"root":["./src/app.ts"],"version":"5.9.3"}
+{"root":["./src/app.ts","./src/express.d.ts","./src/controller/auth.controller.ts","./src/controller/board.controller.ts","./src/controller/column.controller.ts","./src/controller/task.controller.ts","./src/controller/workspace.controller.ts","./src/middleware/auth.middleware.ts","./src/routes/auth.route.ts","./src/routes/board.route.ts","./src/routes/column.route.ts","./src/routes/task.route.ts","./src/routes/workspace.route.ts"],"version":"5.9.2"}
