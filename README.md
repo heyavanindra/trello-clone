@@ -1,135 +1,152 @@
-# Turborepo starter
 
-This Turborepo starter is maintained by the Turborepo core team.
+# Trello Clone
 
-## Using this example
+A full-stack implementation of a Trello-like task management application, built as a monorepo using Turborepo.
 
-Run the following command:
+## 🚀 Tech Stack
 
-```sh
-npx create-turbo@latest
+- **Monorepo:** [Turborepo](https://turbo.build/repo)
+- **Frontend:** [Next.js 16](https://nextjs.org/) (App Router), React 19, Tailwind CSS, Socket.IO Client.
+- **Backend:** Node.js, Express, Socket.IO, MongoDB.
+- **Package Manager:** pnpm.
+
+## 🏗 Architecture Overview
+
+This project is architected as a **Monorepo** using Turborepo, ensuring code sharing and type safety across the stack.
+
+### System Design
+
+```mermaid
+graph TD
+    User[User Client] <--> |HTTP / WebSocket| NextJS[Frontend (Next.js)]
+    NextJS <--> |REST API| Backend[Backend API (Express)]
+    NextJS <--> |Socket.IO Events| Socket[Socket Service]
+    Backend <--> |Mongoose| DB[(MongoDB)]
+    Socket <--> |Mongoose| DB
+    
+    subgraph "Shared Packages"
+        Common[packages/common]
+        Database[packages/database]
+    end
+    
+    Backend -.-> Common
+    NextJS -.-> Common
+    Backend -.-> Database
+    Socket -.-> Database
 ```
 
-## What's inside?
+### Key Components
 
-This Turborepo includes the following packages/apps:
+1.  **Frontend (`apps/frontend`)**:
+    - Built with **Next.js 16 (App Router)** for server-side rendering and static generation.
+    - Uses **Socket.IO Client** to listen for real-time events (e.g., `task-moved`, `task-created`) and update the UI instantly without refreshing.
+    - Uses **Axios** for standard REST API operations like Authentication and initial data fetching.
 
-### Apps and Packages
+2.  **Backend (`apps/backend`)**:
+    - A centralized **Express.js** server that handles both HTTP requests and WebSocket connections.
+    - **REST API**: Manages CRUD operations for Boards, Tasks, and Columns.
+    - **Socket.IO Server**: Handles real-time communication. When a user updates a task (e.g., moves it), the server emits an event to all other users connected to that specific board.
 
-- `docs`: a [Next.js](https://nextjs.org/) app
-- `web`: another [Next.js](https://nextjs.org/) app
-- `@repo/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@repo/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@repo/typescript-config`: `tsconfig.json`s used throughout the monorepo
+3.  **Shared Common (`packages/common`)**:
+    - Contains **Zod schemas** (for runtime validation) and inferred **TypeScript types**.
+    - Ensures that the Frontend and Backend always agree on the data structure (e.g., a `Task` type is defined once and used everywhere).
 
-Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
+4.  **Database Layer (`packages/database`)**:
+    - Exports the database connection logic.
+    - Contains **Mongoose Models** (`Board`, `Task`, `User`, etc.).
+    - This allows the Backend to interact with the DB directly using typed models.
 
-### Utilities
+## 🛠 Prerequisites
 
-This Turborepo has some additional tools already setup for you:
+Ensure you have the following installed on your machine:
 
-- [TypeScript](https://www.typescriptlang.org/) for static type checking
-- [ESLint](https://eslint.org/) for code linting
-- [Prettier](https://prettier.io) for code formatting
+- **Node.js** (v18 or higher)
+- **pnpm** (Version 9.0.0 or higher recommended)
+- **MongoDB** (Local instance or [MongoDB Atlas](https://www.mongodb.com/atlas/database) URI)
 
-### Build
+## 📦 Installation
 
-To build all apps and packages, run the following command:
+1.  **Clone the repository:**
 
+    ```bash
+    git clone https://github.com/heyavanindra/trello-clone.git
+    cd trello-clone
+    ```
+
+2.  **Install dependencies:**
+
+    This project uses `pnpm`. If you don't have it, install it globally via `npm install -g pnpm`.
+
+    ```bash
+    pnpm install
+    ```
+
+## ⚙️ Environment Configuration
+
+You need to configure environment variables for both the backend and frontend applications.
+
+### 1. Backend (`apps/backend`)
+
+Create a `.env` file in the `apps/backend` directory:
+
+```bash
+# apps/backend/.env
+
+# Port for the backend server
+PORT=5000
+
+# MongoDB Connection String
+MONGO_URI=mongodb://localhost:27017/trello-clone
+
+# Secret key for JWT authentication
+JWT_SECRET=your_super_secret_key
+
+# Frontend URL for CORS configuration (No trailing slash)
+FRONTEND_URL=http://localhost:3000
 ```
-cd my-turborepo
 
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build
+### 2. Frontend (`apps/frontend`)
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build
-yarn dlx turbo build
-pnpm exec turbo build
+Create a `.env.local` file in the `apps/frontend` directory:
+
+```bash
+# apps/frontend/.env.local
+
+# URL of the backend API
+NEXT_PUBLIC_API_URL=http://localhost:5000
 ```
 
-You can build a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+## 🏃‍♂️ Running Locally
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo build --filter=docs
+To start the development environment for all apps (frontend and backend) simultaneously:
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo build --filter=docs
-yarn exec turbo build --filter=docs
-pnpm exec turbo build --filter=docs
-```
-
-### Develop
-
-To develop all apps and packages, run the following command:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
+```bash
+pnpm dev
+# or
 turbo dev
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev
-yarn exec turbo dev
-pnpm exec turbo dev
 ```
 
-You can develop a specific package by using a [filter](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters):
+- **Frontend:** http://localhost:3000
+- **Backend:** http://localhost:5000
 
-```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo dev --filter=web
+## 🏗 Building for Production
 
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo dev --filter=web
-yarn exec turbo dev --filter=web
-pnpm exec turbo dev --filter=web
-```
+To build all packages and applications:
 
-### Remote Caching
-
-> [!TIP]
-> Vercel Remote Cache is free for all plans. Get started today at [vercel.com](https://vercel.com/signup?/signup?utm_source=remote-cache-sdk&utm_campaign=free_remote_cache).
-
-Turborepo can use a technique known as [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching) to share cache artifacts across machines, enabling you to share build caches with your team and CI/CD pipelines.
-
-By default, Turborepo will cache locally. To enable Remote Caching you will need an account with Vercel. If you don't have an account you can [create one](https://vercel.com/signup?utm_source=turborepo-examples), then enter the following commands:
-
-```
-cd my-turborepo
-
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo login
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo login
-yarn exec turbo login
-pnpm exec turbo login
+```bash
+pnpm build
 ```
 
-This will authenticate the Turborepo CLI with your [Vercel account](https://vercel.com/docs/concepts/personal-accounts/overview).
-
-Next, you can link your Turborepo to your Remote Cache by running the following command from the root of your Turborepo:
+## 📂 Project Structure
 
 ```
-# With [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation) installed (recommended)
-turbo link
-
-# Without [global `turbo`](https://turborepo.com/docs/getting-started/installation#global-installation), use your package manager
-npx turbo link
-yarn exec turbo link
-pnpm exec turbo link
+├── apps
+│   ├── backend          # Express + Socket.IO server
+│   └── frontend         # Next.js application
+├── packages
+│   ├── common           # Shared Typescript types/utils
+│   ├── database         # Database schemas and connection logic
+│   ├── eslint-config    # Shared ESLint configuration
+│   └── typescript-config # Shared TSConfiguration
+└── package.json         # Root package.json (Turborepo)
 ```
-
-## Useful Links
-
-Learn more about the power of Turborepo:
-
-- [Tasks](https://turborepo.com/docs/crafting-your-repository/running-tasks)
-- [Caching](https://turborepo.com/docs/crafting-your-repository/caching)
-- [Remote Caching](https://turborepo.com/docs/core-concepts/remote-caching)
-- [Filtering](https://turborepo.com/docs/crafting-your-repository/running-tasks#using-filters)
-- [Configuration Options](https://turborepo.com/docs/reference/configuration)
-- [CLI Usage](https://turborepo.com/docs/reference/command-line-reference)
