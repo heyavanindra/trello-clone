@@ -27,12 +27,12 @@ const BoardSchema = new Schema<IBoard>(
       type: String,
     },
     workspaceId: {
-      type: mongoose.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       required: [true, "Workspace ID is required"],
       ref: "Workspace",
     },
     createdBy: {
-      type: mongoose.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       required: [true, "Creator ID is required"],
       ref: "User",
     },

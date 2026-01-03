@@ -26,7 +26,7 @@ const WorkspaceSchema = new Schema<IWorkspace>(
       type: String,
     },
     ownerId: {
-      type: mongoose.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       required: [true, "Owner ID is required"],
       ref: "User",
     },

@@ -1,7 +1,7 @@
 import { loginSchema, signupSchema } from "@repo/common";
 import { User } from "@repo/database";
 import { Request, Response } from "express";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken"
 
 const signup = async (req: Request, res: Response) => {

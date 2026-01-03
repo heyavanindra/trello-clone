@@ -9,12 +9,12 @@ export interface IWorkspaceMember extends Document {
 const WorkspaceMemberSchema = new Schema<IWorkspaceMember>(
   {
     workspaceId: {
-      type: mongoose.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       required: true,
       ref: "Workspace",
     },
     userId: {
-      type: mongoose.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       required: true,
       ref: "User",
     },

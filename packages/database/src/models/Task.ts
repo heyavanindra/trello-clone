@@ -14,12 +14,12 @@ export interface ITask extends Document {
 const TaskSchema = new Schema<ITask>(
   {
     boardId: {
-      type: mongoose.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       required: [true, "Board ID is required"],
       ref: "Board",
     },
     columnId: {
-      type: mongoose.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       required: [true, "Column ID is required"],
       ref: "Column",
     },
@@ -32,7 +32,7 @@ const TaskSchema = new Schema<ITask>(
       required: false,
     },
     createdBy: {
-      type: mongoose.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       required: [true, "Created by is required"],
       ref: "User",
     },

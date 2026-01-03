@@ -14,7 +14,7 @@ const ColumnSchema = new Schema<IColumn>(
       required: [true, "Column name is required"],
     },
     boardId: {
-      type: mongoose.Types.ObjectId,
+      type: Schema.Types.ObjectId,
       required: [true, "Board ID is required"],
       ref: "Board",
     },
