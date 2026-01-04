@@ -5,56 +5,10 @@ A full-stack implementation of a Trello-like task management application, built 
 
 ## 🚀 Tech Stack
 
-- **Monorepo:** [Turborepo](https://turbo.build/repo)
-- **Frontend:** [Next.js 16](https://nextjs.org/) (App Router), React 19, Tailwind CSS, Socket.IO Client.
+- **Monorepo:** [Turborepo]
+- **Frontend:** [Next.js 16] (App Router), React 19, Tailwind CSS, Socket.IO Client.
 - **Backend:** Node.js, Express, Socket.IO, MongoDB.
 - **Package Manager:** pnpm.
-
-## 🏗 Architecture Overview
-
-This project is architected as a **Monorepo** using Turborepo, ensuring code sharing and type safety across the stack.
-
-### System Design
-
-```mermaid
-graph TD
-    User[User Client] <--> |HTTP / WebSocket| NextJS[Frontend (Next.js)]
-    NextJS <--> |REST API| Backend[Backend API (Express)]
-    NextJS <--> |Socket.IO Events| Socket[Socket Service]
-    Backend <--> |Mongoose| DB[(MongoDB)]
-    Socket <--> |Mongoose| DB
-    
-    subgraph "Shared Packages"
-        Common[packages/common]
-        Database[packages/database]
-    end
-    
-    Backend -.-> Common
-    NextJS -.-> Common
-    Backend -.-> Database
-    Socket -.-> Database
-```
-
-### Key Components
-
-1.  **Frontend (`apps/frontend`)**:
-    - Built with **Next.js 16 (App Router)** for server-side rendering and static generation.
-    - Uses **Socket.IO Client** to listen for real-time events (e.g., `task-moved`, `task-created`) and update the UI instantly without refreshing.
-    - Uses **Axios** for standard REST API operations like Authentication and initial data fetching.
-
-2.  **Backend (`apps/backend`)**:
-    - A centralized **Express.js** server that handles both HTTP requests and WebSocket connections.
-    - **REST API**: Manages CRUD operations for Boards, Tasks, and Columns.
-    - **Socket.IO Server**: Handles real-time communication. When a user updates a task (e.g., moves it), the server emits an event to all other users connected to that specific board.
-
-3.  **Shared Common (`packages/common`)**:
-    - Contains **Zod schemas** (for runtime validation) and inferred **TypeScript types**.
-    - Ensures that the Frontend and Backend always agree on the data structure (e.g., a `Task` type is defined once and used everywhere).
-
-4.  **Database Layer (`packages/database`)**:
-    - Exports the database connection logic.
-    - Contains **Mongoose Models** (`Board`, `Task`, `User`, etc.).
-    - This allows the Backend to interact with the DB directly using typed models.
 
 ## 🛠 Prerequisites
 
@@ -62,9 +16,9 @@ Ensure you have the following installed on your machine:
 
 - **Node.js** (v18 or higher)
 - **pnpm** (Version 9.0.0 or higher recommended)
-- **MongoDB** (Local instance or [MongoDB Atlas](https://www.mongodb.com/atlas/database) URI)
+- **MongoDB** (Local instance or [MongoDB Atlas] URI)
 
-## 📦 Installation
+## Installation
 
 1.  **Clone the repository:**
 
@@ -81,55 +35,28 @@ Ensure you have the following installed on your machine:
     pnpm install
     ```
 
-## ⚙️ Environment Configuration
 
-You need to configure environment variables for both the backend and frontend applications.
 
-### 1. Backend (`apps/backend`)
+## Running Locally
 
-Create a `.env` file in the `apps/backend` directory:
+clone this repository and run the following commands:
 
 ```bash
-# apps/backend/.env
-
-# Port for the backend server
-PORT=5000
-
-# MongoDB Connection String
-MONGO_URI=mongodb://localhost:27017/trello-clone
-
-# Secret key for JWT authentication
-JWT_SECRET=your_super_secret_key
-
-# Frontend URL for CORS configuration (No trailing slash)
-FRONTEND_URL=http://localhost:3000
+pnpm install
 ```
 
-### 2. Frontend (`apps/frontend`)
+Create `.env` files in both the `apps/backend` and `apps/frontend` directories using the fields from `.env.example`.
 
-Create a `.env.local` file in the `apps/frontend` directory:
+run the following commands:
 
 ```bash
-# apps/frontend/.env.local
-
-# URL of the backend API
-NEXT_PUBLIC_API_URL=http://localhost:5000
-```
-
-## 🏃‍♂️ Running Locally
-
-To start the development environment for all apps (frontend and backend) simultaneously:
-
-```bash
-pnpm dev
-# or
-turbo dev
-```
+pnpm run dev
+``` 
 
 - **Frontend:** http://localhost:3000
 - **Backend:** http://localhost:5000
 
-## 🏗 Building for Production
+## Building for Production
 
 To build all packages and applications:
 
@@ -137,12 +64,12 @@ To build all packages and applications:
 pnpm build
 ```
 
-## 📂 Project Structure
+## Project Structure
 
 ```
 ├── apps
 │   ├── backend          # Express + Socket.IO server
-│   └── frontend         # Next.js application
+│   ├── frontend         # Next.js application
 ├── packages
 │   ├── common           # Shared Typescript types/utils
 │   ├── database         # Database schemas and connection logic
@@ -150,3 +77,60 @@ pnpm build
 │   └── typescript-config # Shared TSConfiguration
 └── package.json         # Root package.json (Turborepo)
 ```
+
+## Architecture
+
+### 1. Project Architecture Overview
+
+The project follows a **Monorepo** structure managed by **TurboRepo** and **PNPM**:
+
+*   **Apps**:
+    *   `apps/backend`: Node.js/Express server handling business logic, database interactions, and real-time sockets.
+    *   `apps/frontend`: Next.js 14+ (App Router) client for UI and state management.
+*   **Packages** (Shared):
+    *   `packages/database`: Mongoose models (`User`, `Workspace`, `Board`, `Task`, `WorkspaceMember`) and connection logic.
+    *   `packages/common`: Shared Zod schemas and TypeScript types.
+    *   `packages/ui`: Shared UI components.
+
+### 2. RBAC (Role-Based Access Control) Implementation
+
+The RBAC system defines permissions based on the relationship between a `User` and a `Workspace`.
+
+#### Database Schema
+*   **WorkspaceMember**: Links `userId` and `workspaceId` with a `role` enum (`['OWNER', 'ADMIN', 'MEMBER']`). Default is `'MEMBER'`.
+
+#### Backend Logic
+*   **Authentication**: `authMiddleware` validates JWT tokens and attaches `req.userId`.
+*   **Role Identification**: The endpoint `GET /api/boards/role/:workspaceSlug` queries the `WorkspaceMember` collection for the user's role.
+*   **Authorization**:
+    *   **Explicit**: Controllers (e.g., `inviteUserToWorkspace`) manually check if `workspace.ownerId` matches the requester.
+    *   **Implicit**: Read operations filter results based on database membership.
+
+#### Frontend Logic
+*   **Role Retrieval**: The board page fetches the user's role on load.
+*   **Conditional Rendering**: Components receive the `role` prop to conditionally render actions like **Delete** or **Edit**.
+
+### 3. Socket.io & Real-Time Flow
+
+Real-time updates use a room-based architecture in Socket.io.
+
+#### Connection & Auth
+*   **Client**: Sends JWT token during handshake.
+*   **Server**: Middleware verifies the token and attaches `socket.userId`.
+
+#### Room Management
+*   Clients emit `join-board` with `boardSlug` to join specific rooms.
+
+#### Event Flow (e.g., Moving a Task)
+1.  **Frontend**: User drags task -> `socket.emit("task-moved")` -> Optimistic UI update.
+2.  **Server**: Listens for event -> Broadcasts `task-updated` to room -> Updates MongoDB asynchronously.
+3.  **Clients**: Receive `task-updated` -> Update local state.
+
+### 4. API Flow
+
+Follows a RESTful Controller-Service pattern:
+
+1.  **Request**: Frontend Axios call.
+2.  **Routing**: Express routes apply `authMiddleware`.
+3.  **Controller**: Validates input (Zod), checks permissions, performs DB operations (Mongoose).
+4.  **Response**: JSON data returned to client.
