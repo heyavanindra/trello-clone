@@ -1,7 +1,7 @@
 "use client";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SignupInput, signupSchema } from "@repo/common"; // Kept your imports exactly as is
+import { SignupInput, signupSchema } from "@repo/common";
 import api from "@/lib/api";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
@@ -33,9 +33,7 @@ export default function SignupPage() {
   };
 
   return (
-    // Background: Neutral-50
     <div className="min-h-screen bg-neutral-50 flex items-center justify-center p-4 selection:bg-neutral-200">
-      {/* Container: Inner highlight top, soft shadow bottom */}
       <div className="bg-white rounded-2xl border border-neutral-200 p-8 max-w-md w-full shadow-[0_20px_40px_-12px_rgba(0,0,0,0.1),inset_0_1px_0_rgba(255,255,255,1)]">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-neutral-900 mb-2">
@@ -68,7 +66,6 @@ export default function SignupPage() {
             )}
           </div>
 
-          {/* Username */}
           <div>
             <label className="block text-sm font-medium text-neutral-700 mb-2">
               Username
@@ -92,7 +89,6 @@ export default function SignupPage() {
             )}
           </div>
 
-          {/* Email */}
           <div>
             <label className="block text-sm font-medium text-neutral-700 mb-2">
               Email Address
@@ -116,7 +112,6 @@ export default function SignupPage() {
             )}
           </div>
 
-          {/* Password */}
           <div>
             <label className="block text-sm font-medium text-neutral-700 mb-2">
               Password
@@ -145,10 +140,8 @@ export default function SignupPage() {
             )}
           </div>
 
-          {/* Submit Button */}
           <button
             type="submit"
-            // Button Style: Dark neutral, top highlight, bottom shadow
             className="w-full bg-neutral-900 text-white py-3 rounded-xl font-medium shadow-[0_4px_6px_-1px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.2)] hover:bg-neutral-800 hover:shadow-[0_6px_8px_-2px_rgba(0,0,0,0.3),inset_0_1px_0_rgba(255,255,255,0.2)] hover:-translate-y-px active:translate-y-0 active:shadow-none transition-all duration-200"
           >
             Create Account
