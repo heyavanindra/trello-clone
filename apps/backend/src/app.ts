@@ -19,7 +19,7 @@ export type TaskType = {
   _id: string;
   id: string;
   title: string;
-  description?: string; // optional
+  description?: string; 
   boardId: string;
   columnId: string;
   createdBy: string;
@@ -49,7 +49,6 @@ io.use((socket, next) => {
   }
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET!);
-    // Attach user info to socket
     (socket as any).userId = (decoded as JwtPayload).userId;
     next();
   } catch (err) {

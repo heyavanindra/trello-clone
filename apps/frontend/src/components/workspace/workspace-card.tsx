@@ -10,8 +10,7 @@ const WorkspaceCard = ({ workspace }: { workspace: Workspace }) => {
       href={`/dashboard/workspace/${workspace.slug}`}
       className="group block"
     >
-      <div className="h-48 rounded-2xl bg-white border border-neutral-200 p-6 shadow-[0_2px_4px_rgba(0,0,0,0.02),inset_0_1px_0_rgba(255,255,255,1)] hover:shadow-[0_10px_30px_-10px_rgba(0,0,0,0.1)] hover:-translate-y-1 transition-all duration-300 flex flex-col">
-        {/* Workspace Icon */}
+      <div className=" rounded-2xl bg-white border border-neutral-200 p-6 shadow-[0_2px_4px_rgba(0,0,0,0.02),inset_0_1px_0_rgba(255,255,255,1)] hover:shadow-[0_10px_30px_-10px_rgba(0,0,0,0.1)] hover:-translate-y-1 transition-all duration-300 flex flex-col">
         <div className="flex items-start justify-between mb-4">
           <div className="w-12 h-12 rounded-xl bg-linear-to-br from-neutral-100 to-neutral-200 flex items-center justify-center shadow-[inset_0_2px_4px_rgba(0,0,0,0.1)] group-hover:scale-110 transition-transform duration-300">
             <Briefcase className="w-5 h-5 text-neutral-700" />
@@ -22,7 +21,6 @@ const WorkspaceCard = ({ workspace }: { workspace: Workspace }) => {
           </div>
         </div>
 
-        {/* Workspace Info */}
         <div className="flex-1">
           <h3 className="text-xl font-bold text-neutral-900 mb-2 group-hover:text-neutral-700 transition-colors line-clamp-1">
             {workspace.name}
@@ -32,7 +30,6 @@ const WorkspaceCard = ({ workspace }: { workspace: Workspace }) => {
           </p>
         </div>
 
-        {/* Footer */}
         <div className="flex items-center justify-between mt-4 pt-4 border-t border-neutral-100">
           <button
             onClick={(e) => {
