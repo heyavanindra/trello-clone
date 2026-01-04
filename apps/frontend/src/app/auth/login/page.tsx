@@ -7,8 +7,11 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import Cookies from "js-cookie";
 
+import { useAuth } from "@/context/auth-context";
+
 export default function LoginPage() {
-  const router = useRouter();
+  const router = useRouter(); // Keep for safety, though context handles redirect
+  const { login } = useAuth();
 
   const {
     register,
@@ -24,12 +27,9 @@ export default function LoginPage() {
     try {
       const response = await api.post("/auth/login", data);
 
-      // Store token in cookie
-      if (response.data.token) {
-        Cookies.set("token", response.data.token, {
-          expires: 7,
-        });
-      }
+      // Token will be handled by the context's login function
+
+      return response;
 
       return response;
     } catch (error) {
@@ -42,7 +42,9 @@ export default function LoginPage() {
     toast.promise(createEvent(data), {
       loading: "Logging in...",
       success: (response) => {
-        router.push("/dashboard/workspace");
+        if (response.data.token) {
+          login(response.data.token);
+        }
         return "Logged in successfully";
       },
       error: (error) => {

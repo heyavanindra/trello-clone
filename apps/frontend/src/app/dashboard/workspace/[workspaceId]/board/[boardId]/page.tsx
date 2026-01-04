@@ -225,7 +225,6 @@ const BoardPage = () => {
   return (
     <div className="min-h-screen w-full bg-neutral-50 text-neutral-900 p-8 font-sans">
       <div className="max-w-7xl mx-auto">
-        {/* Back Button */}
         <Link
           href={`/dashboard/workspace/${workspaceSlug}`}
           className="inline-flex items-center gap-2 text-neutral-600 hover:text-neutral-900 mb-6 transition-colors"
@@ -234,7 +233,6 @@ const BoardPage = () => {
           <span className="text-sm font-medium">Back to Boards</span>
         </Link>
 
-        {/* Header */}
         <div className="mb-8 flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-neutral-800">
@@ -244,6 +242,7 @@ const BoardPage = () => {
               Drag and drop cards to manage progress
             </p>
           </div>
+         {role === "OWNER" ? (
           <button
             onClick={() => setShowCreateModal(true)}
             className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-neutral-900 text-white text-sm font-medium shadow-[0_2px_4px_rgba(0,0,0,0.2)] hover:bg-neutral-800 transition-all"
@@ -251,6 +250,7 @@ const BoardPage = () => {
             <Plus className="w-4 h-4" />
             Add Column
           </button>
+         ) : null}
         </div>
 
         {/* Columns */}
