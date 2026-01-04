@@ -204,8 +204,6 @@ export const inviteUserToWorkspace = async (req: Request, res: Response) => {
     if (!workspace)
       return res.status(404).json({ message: "Workspace not found" });
 
-    console.log("email", email);
-
     if (workspace.ownerId.toString() !== requesterId.toString()) {
       return res
         .status(403)
@@ -213,7 +211,7 @@ export const inviteUserToWorkspace = async (req: Request, res: Response) => {
     }
 
     const userToInvite = await User.findOne({ email });
-    console.log("user to invite", userToInvite);
+
     if (!userToInvite) {
       return res
         .status(404)
@@ -241,7 +239,6 @@ export const inviteUserToWorkspace = async (req: Request, res: Response) => {
 };
 
 export const getWorkspaceMembers = async (req: Request, res: Response) => {
-  console.log("req");
   try {
     const { slug } = req.params;
     const userId = req.userId;
@@ -285,7 +282,6 @@ export const getWorkspaceMembers = async (req: Request, res: Response) => {
 };
 
 export const getAllWorkspacesByMember = async (req: Request, res: Response) => {
-  console.log("req");
   try {
     const userId = req.userId;
     if (!userId) {
@@ -307,7 +303,6 @@ export const getAllWorkspacesByMember = async (req: Request, res: Response) => {
       })
       .filter((w) => w !== null);
 
-    console.log("members ", workspaces);
     return res.status(200).json({
       message: "Workspaces retrieved successfully",
       workspaces,

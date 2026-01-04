@@ -154,18 +154,15 @@ export const updateTask = async (req: Request, res: Response) => {
 
     const updateData = result.data;
 
-    // Check if there's any data to update
     if (Object.keys(updateData).length === 0) {
       return res.status(400).json({ message: "No update data provided" });
     }
 
-    // Find the task first
     const existingTask = await Task.findById(id);
     if (!existingTask) {
       return res.status(404).json({ message: "Task not found" });
     }
 
-    // Verify the user owns the workspace
     const board = await Board.findById(existingTask.boardId);
     if (!board) {
       return res.status(404).json({ message: "Board not found" });
@@ -216,13 +213,11 @@ export const deleteTask = async (req: Request, res: Response) => {
       return res.status(400).json({ message: "Invalid task ID" });
     }
 
-    // Find the task first
     const existingTask = await Task.findById(id);
     if (!existingTask) {
       return res.status(404).json({ message: "Task not found" });
     }
 
-    // Verify the user owns the workspace
     const board = await Board.findById(existingTask.boardId);
     if (!board) {
       return res.status(404).json({ message: "Board not found" });

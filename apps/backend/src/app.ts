@@ -42,10 +42,7 @@ app.use(
   })
 );
 
-console.log(process.env.FRONTEND_URL)
-
 io.use((socket, next) => {
-  console.log("hello world")
   const token = socket.handshake.auth.token;
   if (!token) {
     return next(new Error("Authentication error"));
@@ -61,10 +58,8 @@ io.use((socket, next) => {
 });
 
 io.on("connection", (socket) => {
-  console.log("a user connected");
   socket.on("join-board", (boardId: string) => {
     socket.join(boardId);
-    console.log(`User joined board: ${boardId}`);
   });
   socket.on(
     "task-moved",
@@ -95,23 +90,19 @@ io.on("connection", (socket) => {
         //@ts-ignore
         createdBy: socket.userId,
       };
-    
+
       const newTask = await Task.create(taskCreated);
-      console.log(newTask);
+
       io.to(data.boardSlug).emit("task-created", {
         task: newTask,
       });
     }
   );
 
-  socket.on("disconnect", () => {
-    console.log("user disconnected");
-  });
+  socket.on("disconnect", () => {});
 });
 
 app.use(express.json());
-
-
 
 const PORT = process.env.PORT || 5000;
 
@@ -129,6 +120,4 @@ app.use("/api/boards", boardRouter);
 app.use("/api/columns", columnRouter);
 app.use("/api/tasks", taskRouter);
 
-server.listen(PORT, () => {
-  console.log(`Server is listening on port ${PORT}`);
-});
+server.listen(PORT, () => {});

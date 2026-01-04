@@ -34,8 +34,6 @@ export const createBoard = async (req: Request, res: Response) => {
       });
     }
 
-    console.log("workspaces", workspace);
-
     const newBoard = new Board({
       name,
       description,
@@ -125,8 +123,6 @@ export const getBoardById = async (req: Request, res: Response) => {
     if (!board) {
       return res.status(404).json({ message: "Board not found" });
     }
-
-  
 
     return res.status(200).json({
       message: "Board retrieved successfully",
@@ -220,7 +216,6 @@ export const deleteBoard = async (req: Request, res: Response) => {
       return res.status(404).json({ message: "Board not found" });
     }
 
-    // Verify the user owns the workspace that contains this board
     const workspace = await Workspace.findOne({
       _id: existingBoard.workspaceId,
     });
@@ -247,7 +242,6 @@ export const deleteBoard = async (req: Request, res: Response) => {
 };
 
 export const getRole = async (req: Request, res: Response) => {
-  console.log("getRole");
   try {
     const { workspaceSlug } = req.params;
 
@@ -261,11 +255,7 @@ export const getRole = async (req: Request, res: Response) => {
       return res.status(401).json({ message: "Unauthorized" });
     }
 
-    console.log("workspaceSlug", workspaceSlug);
-
     const workspace = await Workspace.findOne({ slug: workspaceSlug });
-
-    console.log("workspace", workspace);
 
     if (!workspace) {
       return res.status(404).json({ message: "Workspace not found" });
@@ -288,8 +278,6 @@ export const getRole = async (req: Request, res: Response) => {
         message: "You don't have permission to access this board",
       });
     }
-
-    console.log("role", role);
 
     return res.status(200).json({
       message: "Role retrieved successfully",

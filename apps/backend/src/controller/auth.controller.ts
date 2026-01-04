@@ -2,12 +2,10 @@ import { loginSchema, signupSchema } from "@repo/common";
 import { User } from "@repo/database";
 import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken"
+import jwt from "jsonwebtoken";
 
 const signup = async (req: Request, res: Response) => {
-
   const result = signupSchema.safeParse(req.body);
-  console.log("Data", result.data)
 
   if (!result.success) {
     return res.status(400).json({ message: result.error.message });
@@ -32,13 +30,13 @@ const signup = async (req: Request, res: Response) => {
 
     await newUser.save();
 
-    return res.status(201).json({ 
+    return res.status(201).json({
       message: "User registered successfully",
       user: {
         id: newUser._id,
         email: newUser.email,
         name: newUser.name,
-      }
+      },
     });
   } catch (error) {
     console.error("Signup error:", error);
@@ -66,21 +64,22 @@ const login = async (req: Request, res: Response) => {
     }
 
     const token = jwt.sign(
-      { 
+      {
         userId: user._id,
-        email: user.email 
+        email: user.email,
+        name: user.name,
       },
-      process.env.JWT_SECRET || 'your-secret-key', 
-      { expiresIn: '7d' } 
+      process.env.JWT_SECRET || "your-secret-key",
+      { expiresIn: "7d" }
     );
 
-    return res.status(200).json({ 
+    return res.status(200).json({
       message: "User logged in successfully",
       token,
       user: {
         email: user.email,
         name: user.name,
-      }
+      },
     });
   } catch (error) {
     console.error("Login error:", error);
