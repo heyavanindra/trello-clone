@@ -7,7 +7,7 @@ const Navbar = () => {
           <div className="w-6 h-6 rounded bg-neutral-900 flex items-center justify-center">
             <div className="w-2 h-2 rounded-full bg-neutral-50" />
           </div>
-          SyncTask
+          Mini-Trello
         </Link>
         <div className="hidden md:flex items-center gap-8 text-sm font-medium text-neutral-500">
           <Link
